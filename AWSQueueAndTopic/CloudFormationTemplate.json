@@ -1,0 +1,29 @@
+{
+  "Resources": {
+    "AnyNotificationTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "TopicName": "any-notification-topic"
+      }
+    },
+    "AnyNotificationQueue": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "any-notification-queue",
+        "RedrivePolicy": {
+          "deadLetterTargetArn": { "Fn::GetAtt": [ "AnyNotificationDlq", "Arn" ] },
+          "maxReceiveCount": "3"
+        },
+        "VisibilityTimeout": "45"
+      }
+    },
+    "AnyNotificationDlq": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "any-notification-dlq",
+        "MessageRetentionPeriod": "604800",
+        "VisibilityTimeout": "45"
+      }
+    }
+  }
+}
