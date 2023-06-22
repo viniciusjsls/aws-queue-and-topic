@@ -3,7 +3,15 @@
     "AnyNotificationTopic": {
       "Type": "AWS::SNS::Topic",
       "Properties": {
-        "TopicName": "any-notification-topic"
+        "TopicName": "any-notification-topic",
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Fn::GetAtt": [ "AnyNotificationQueue", "Arn" ]
+            },
+            "Protocol": "sqs"
+          }
+        ]
       }
     },
     "AnyNotificationQueue": {
