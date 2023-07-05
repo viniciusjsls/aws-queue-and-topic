@@ -84,7 +84,11 @@
                   "Action": [
                     "s3:GetObject",
                     "s3:ListBucket",
-                    "sqs:ReceiveMessage"
+                    "sqs:ReceiveMessage",
+                    "sqs:DeleteMessage",
+                    "sqs:GetQueueAttributes",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
                   ],
                   "Resource": "*"
                 }
