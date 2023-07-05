@@ -103,8 +103,8 @@
           "S3Key": "aws-queue-and-topic/deploy-package.zip"
         },
         "FunctionName": "any-event-function-handler",
-        "Handler": "AWSQueueAndTopic::AWSQueueAndTopic.Handlers.Any::AnyNotificationQueueHandler",
-        "MemorySize": "128",
+        "Handler": "AWSQueueAndTopic::AWSQueueAndTopic.Handlers.Any.AnyNotificationQueueHandler::Handle",
+        "MemorySize": 128,
         "PackageType": "Zip",
         "Role": { "Fn::GetAtt": [ "AnyEventFunctionHandlerRole", "Arn" ] },
         "Runtime": "dotnet6"
