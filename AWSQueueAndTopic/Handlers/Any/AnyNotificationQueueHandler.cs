@@ -1,22 +1,23 @@
 ﻿
+using Amazon.Lambda.Core;
 using Amazon.Lambda.SNSEvents;
 using AWSQueueAndTopic.Model;
 using System.Text.Json;
 
 namespace AWSQueueAndTopic.Handlers.Any
 {
-    internal class AnyNotificationQueueHandler : SQSBaseHandler<SNSEvent>
+    public class AnyNotificationQueueHandler : SQSBaseHandler<SNSEvent.SNSMessage>
     {
-        internal override async Task HandleRequest(SNSEvent message)
+        internal override async Task HandleRequest(SNSEvent.SNSMessage snsMessage)
         {
-            AnyEvent? anyEvent = JsonSerializer.Deserialize<AnyEvent>(message.Records.First().Sns.Message);
+            AnyEvent? anyEvent = JsonSerializer.Deserialize<AnyEvent>(snsMessage.Message);
 
             await DoSomething(anyEvent);
         }
 
         private Task DoSomething(AnyEvent? anyEvent)
         {
-            Console.Write($"Event received { anyEvent?.Name }");
+            LambdaLogger.Log($"Event received { anyEvent?.Name }");
 
             return Task.CompletedTask;
         }

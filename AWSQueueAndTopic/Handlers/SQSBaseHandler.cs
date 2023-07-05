@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace AWSQueueAndTopic.Handlers
 {
-    internal abstract class SQSBaseHandler<T> where T : class
+    public abstract class SQSBaseHandler<T> where T : class
     {
         public async Task<SQSBatchResponse> Handle(SQSEvent sqsEvent, ILambdaContext context)
         {
@@ -28,7 +28,7 @@ namespace AWSQueueAndTopic.Handlers
 
         internal abstract Task HandleRequest(T message);
 
-        private T DeserializeSQSMessage(SQSEvent.SQSMessage sqsMessage)
+        public T DeserializeSQSMessage(SQSEvent.SQSMessage sqsMessage)
         {
             var deserializedSQSMessage = JsonSerializer.Deserialize<T>(sqsMessage.Body);
 
