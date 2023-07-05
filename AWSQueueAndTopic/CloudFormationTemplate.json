@@ -113,6 +113,29 @@
         "Role": { "Fn::GetAtt": [ "AnyEventFunctionHandlerRole", "Arn" ] },
         "Runtime": "dotnet6"
       }
+    },
+    "AnyEventEventSourceMapping": {
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "Properties": {
+        "EventSourceArn": { "Fn::GetAtt": [ "AnyNotificationQueue", "Arn" ] },
+        "FunctionName": { "Fn::GetAtt": [ "AnyEventFunctionHandler", "Arn" ] }
+      }
+    },
+    "AnyEventFunctionHandlerLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Sub": [
+            "/aws/lambda/${FunctionName}",
+            {
+              "FunctionName": {
+                "Ref": "AnyEventFunctionHandler"
+              }
+            }
+          ]
+        },
+        "RetentionInDays": 3
+      }
     }
   }
 }
