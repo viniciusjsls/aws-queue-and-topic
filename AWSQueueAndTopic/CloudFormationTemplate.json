@@ -3,15 +3,7 @@
     "AnyNotificationTopic": {
       "Type": "AWS::SNS::Topic",
       "Properties": {
-        "TopicName": "any-notification-topic",
-        "Subscription": [
-          {
-            "Endpoint": {
-              "Fn::GetAtt": [ "AnyNotificationQueue", "Arn" ]
-            },
-            "Protocol": "sqs"
-          }
-        ]
+        "TopicName": "any-notification-topic"
       }
     },
     "AnyNotificationQueue": {
@@ -25,12 +17,43 @@
         "VisibilityTimeout": "45"
       }
     },
+    "AnyNotificationQueuePolicy": {
+      "Type": "AWS::SQS::QueuePolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "sns.amazonaws.com"
+              },
+              "Action": "sqs:SendMessage",
+              "Resource": { "Fn::GetAtt": [ "AnyNotificationQueue", "Arn" ] },
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": { "Ref": "AnyNotificationTopic" }
+                }
+              }
+            }
+          ]
+        },
+        "Queues": [ { "Ref": "AnyNotificationQueue" } ]
+      }
+    },
     "AnyNotificationDlq": {
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": "any-notification-dlq",
         "MessageRetentionPeriod": "604800",
         "VisibilityTimeout": "45"
+      }
+    },
+    "AnyNotificationTopicQueueSubscription": {
+      "Type": "AWS::SNS::Subscription",
+      "Properties": {
+        "Endpoint": { "Fn::GetAtt": [ "AnyNotificationQueue", "Arn" ] },
+        "Protocol": "sqs",
+        "TopicArn": { "Ref": "AnyNotificationTopic" }
       }
     },
     "AnyEventFunctionHandlerRole": {
